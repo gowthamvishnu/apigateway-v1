@@ -122,14 +122,14 @@ variable "dynamic_paths_1" {
 }
 variable "dynamic_paths_2" {
   type = list(string)
-  default = ["v1", "v2", "v3", "v4"]
+  default = ["v1", "v2", "v3"]
 }
 variable "dynamic_paths_3" {
   type = list(list(string))
   default = [
     ["Subpath1_1", "Subpath1_2", "Subpath1_3","Subpath1_4"],
-    ["Subpath2_1", "Subpath2_2", "Subpath2_3"],
-    ["Subpath3_1", "Subpath3_2", "Subpath3_3"]
+    ["Subpath2_1", "Subpath2_2", "Subpath2_3"]
+    #["Subpath3_1", "Subpath3_2", "Subpath3_3"]
     # ["Subpath4_1", "Subpath4_2"]
     # ["bidya", "rajat", "naveen"]
   ]
