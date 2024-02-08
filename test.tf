@@ -117,21 +117,21 @@ variable "api_name" {
 }
 variable "dynamic_paths_1" {
   type = list(string)
-  default = ["ondot-mcs", "ondot-cm", "ondot-tde", "ondot-cas"]
+  #default = ["ondot-mcs", "ondot-cm", "ondot-tde", "ondot-cas"]
 }
 variable "dynamic_paths_2" {
   type = list(string)
-  default = ["v1", "v2"]
+  #default = ["v1", "v2"]
 }
 variable "dynamic_paths_3" {
   type = list(list(string))
-  default = [
-    ["Subpath1_1", "Subpath1_2", "Subpath1_3","Subpath1_4"],
-    ["Subpath2_1", "Subpath2_2", "Subpath2_3"]
+  #default = [
+    #["Subpath1_1", "Subpath1_2", "Subpath1_3","Subpath1_4"],
+    #["Subpath2_1", "Subpath2_2", "Subpath2_3"]
     #["Subpath3_1", "Subpath3_2", "Subpath3_3"]
     # ["Subpath4_1", "Subpath4_2"]
     # ["bidya", "rajat", "naveen"]
-  ]
+  #]
 }
 resource "aws_api_gateway_rest_api" "example" {
   name        = var.api_name
