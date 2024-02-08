@@ -112,27 +112,26 @@
 
 ##################################################################################################
 
-
 variable "api_name" {
   default = "my-api"
 }
 variable "dynamic_paths_1" {
   type = list(string)
-  #default = ["ondot-mcs", "ondot-cm", "ondot-tde", "ondot-cas","mani"]
+  default = ["ondot-mcs", "ondot-cm", "ondot-tde", "ondot-cas"]
 }
 variable "dynamic_paths_2" {
   type = list(string)
-  #default = ["v1", "v2", "v3"]
+  default = ["v1", "v2"]
 }
 variable "dynamic_paths_3" {
   type = list(list(string))
-  #default = [
-   #["Subpath1_1", "Subpath1_2", "Subpath1_3","Subpath1_4"],
-    #["Subpath2_1", "Subpath2_2", "Subpath2_3"]
+  default = [
+    ["Subpath1_1", "Subpath1_2", "Subpath1_3","Subpath1_4"],
+    ["Subpath2_1", "Subpath2_2", "Subpath2_3"]
     #["Subpath3_1", "Subpath3_2", "Subpath3_3"]
     # ["Subpath4_1", "Subpath4_2"]
     # ["bidya", "rajat", "naveen"]
-  #]
+  ]
 }
 resource "aws_api_gateway_rest_api" "example" {
   name        = var.api_name
@@ -225,6 +224,7 @@ resource "aws_api_gateway_integration" "dynamic_1" {
   rest_api_id               = aws_api_gateway_rest_api.example.id
   resource_id               = aws_api_gateway_resource.dynamic_1[length(local.list2) + count.index].id
   http_method               = aws_api_gateway_method.dynamic_1[count.index].http_method
+  uri = "arn:aws:apigateway:${data.aws_region.current.name}:sqs:path/${data.aws_caller_identity.current.id}/${aws_sqs_queue.queue1[count.index].name}"
   integration_http_method   = "POST"
   type                      = "MOCK"
 }
@@ -233,6 +233,7 @@ resource "aws_api_gateway_integration" "dynamic_2" {
   rest_api_id               = aws_api_gateway_rest_api.example.id
   resource_id               = aws_api_gateway_resource.dynamic_2[length(local.list3) + count.index].id
   http_method               = aws_api_gateway_method.dynamic_2[count.index].http_method
+  uri = "arn:aws:apigateway:${data.aws_region.current.name}:sqs:path/${data.aws_caller_identity.current.id}/${aws_sqs_queue.queue2[count.index].name}"
   integration_http_method   = "POST"
   type                      = "MOCK"
 }
@@ -241,6 +242,7 @@ resource "aws_api_gateway_integration" "dynamic_3" {
   rest_api_id               = aws_api_gateway_rest_api.example.id
   resource_id               = aws_api_gateway_resource.dynamic_3[count.index].id
   http_method               = aws_api_gateway_method.dynamic_3[count.index].http_method
+  uri = "arn:aws:apigateway:${data.aws_region.current.name}:sqs:path/${data.aws_caller_identity.current.id}/${aws_sqs_queue.queue3[count.index].name}"
   integration_http_method   = "POST"
   type                      = "MOCK"
 }
@@ -248,9 +250,8 @@ resource "aws_api_gateway_deployment" "example" {
   rest_api_id = aws_api_gateway_rest_api.example.id
   triggers = {
     redeployment = sha1(jsonencode([
-      # aws_api_gateway_resource.dynamic_1[*].id,
-      # aws_api_gateway_resource.dynamic_2[*].id,
-      # aws_api_gateway_resource.dynamic_3[*].id,
+      aws_api_gateway_method.dynamic_1[*].id,
+      aws_api_gateway_integration.dynamic_1[*].id,
       aws_api_gateway_method.dynamic_2[*].id,
       aws_api_gateway_integration.dynamic_2[*].id,
       aws_api_gateway_method.dynamic_3[*].id,
@@ -266,5 +267,6 @@ resource "aws_api_gateway_stage" "example" {
   rest_api_id   = aws_api_gateway_rest_api.example.id
   stage_name    = "rest_api_stage"
 }
+
 
 
