@@ -221,7 +221,7 @@ resource "aws_api_gateway_method" "dynamic_3" {
   authorization = "NONE"
 }
 resource "aws_api_gateway_integration" "dynamic_1" {
-  count                     = local.list_2_extra_count
+  count                     = local.list_1_extra_count
   rest_api_id               = aws_api_gateway_rest_api.example.id
   resource_id               = aws_api_gateway_resource.dynamic_1[length(local.list2) + count.index].id
   http_method               = aws_api_gateway_method.dynamic_1[count.index].http_method
